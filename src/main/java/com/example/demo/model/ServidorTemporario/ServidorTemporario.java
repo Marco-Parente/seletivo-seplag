@@ -22,6 +22,4 @@ public class ServidorTemporario {
     @MapsId
     @JoinColumn(name = "pes_id")
     private Pessoa pessoa;
-
-    // Getters and Setters
 }
