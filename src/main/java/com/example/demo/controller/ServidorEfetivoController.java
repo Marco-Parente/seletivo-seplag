@@ -6,7 +6,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,8 @@ import com.example.demo.model.ServidorEfetivo.ServidorEfetivo;
 import com.example.demo.model.ServidorEfetivo.ServidorEfetivoMapper;
 import com.example.demo.model.ServidorEfetivo.ServidorEfetivoModelAssembler;
 import com.example.demo.repository.ServidorEfetivoRepository;
+
+import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
 @RequestMapping("/servidor-efetivo")
@@ -33,13 +37,14 @@ public class ServidorEfetivoController {
     private ServidorEfetivoModelAssembler assembler;
 
     @GetMapping
-    public CollectionModel<EntityModel<ObterServidorEfetivoDTO>> getAll() {
-        List<EntityModel<ObterServidorEfetivoDTO>> servidores = repository.findAll().stream()
+    @PageableAsQueryParam
+    public CollectionModel<EntityModel<ObterServidorEfetivoDTO>> getAll(@Parameter(hidden = true) Pageable pageable) {
+        List<EntityModel<ObterServidorEfetivoDTO>> servidores = repository.findAll(pageable).stream()
                 .map(servidorEfetivoMapper::toObterServidorEfetivoDTO)
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(servidores, linkTo(methodOn(ServidorEfetivoController.class).getAll()).withSelfRel());
+        return CollectionModel.of(servidores, linkTo(methodOn(ServidorEfetivoController.class).getAll(pageable)).withSelfRel());
     }
 
     @GetMapping("/{id}")

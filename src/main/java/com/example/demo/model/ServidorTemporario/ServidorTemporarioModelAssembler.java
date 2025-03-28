@@ -3,6 +3,7 @@ package com.example.demo.model.ServidorTemporario;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.lang.NonNull;
@@ -18,6 +19,6 @@ public class ServidorTemporarioModelAssembler implements RepresentationModelAsse
     public EntityModel<ObterServidorTemporarioDTO> toModel(@NonNull ObterServidorTemporarioDTO servidorTemporario) {
         return EntityModel.of(servidorTemporario,
                 linkTo(methodOn(ServidorTemporarioController.class).getById(servidorTemporario.getId())).withSelfRel(),
-                linkTo(methodOn(ServidorTemporarioController.class).getAll()).withRel("servidoresTemporarios"));
+                linkTo(methodOn(ServidorTemporarioController.class).getAll(Pageable.unpaged())).withRel("servidoresTemporarios"));
     }
 }

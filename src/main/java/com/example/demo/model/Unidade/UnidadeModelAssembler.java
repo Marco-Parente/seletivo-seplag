@@ -2,6 +2,7 @@ package com.example.demo.model.Unidade;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.lang.NonNull;
@@ -18,7 +19,7 @@ public class UnidadeModelAssembler
     public EntityModel<ObterUnidadeDTO> toModel(@NonNull ObterUnidadeDTO entity) {
         return EntityModel.of(entity,
                 linkTo(methodOn(UnidadeController.class).getById(entity.getId())).withSelfRel(),
-                linkTo(methodOn(UnidadeController.class).getAll()).withRel("unidades"));
+                linkTo(methodOn(UnidadeController.class).getAll(Pageable.unpaged())).withRel("unidades"));
     }
 
 }

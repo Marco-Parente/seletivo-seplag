@@ -6,7 +6,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +27,8 @@ import com.example.demo.model.Unidade.UnidadeMapper;
 import com.example.demo.model.Unidade.UnidadeModelAssembler;
 import com.example.demo.repository.UnidadeRepository;
 
+import io.swagger.v3.oas.annotations.Parameter;
+
 
 @RestController
 @RequestMapping("/unidade")
@@ -40,13 +44,14 @@ public class UnidadeController {
     private UnidadeModelAssembler assembler;
 
     @GetMapping
-    public CollectionModel<EntityModel<ObterUnidadeDTO>> getAll() {
-        List<EntityModel<ObterUnidadeDTO>> unidades = repository.findAll().stream()
+    @PageableAsQueryParam
+    public CollectionModel<EntityModel<ObterUnidadeDTO>> getAll(@Parameter(hidden = true) Pageable pageable) {
+        List<EntityModel<ObterUnidadeDTO>> unidades = repository.findAll(pageable).stream()
                 .map(unidadeMapper::toObterUnidadeDTO)
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(unidades, linkTo(methodOn(UnidadeController.class).getAll()).withSelfRel());
+        return CollectionModel.of(unidades, linkTo(methodOn(UnidadeController.class).getAll(pageable)).withSelfRel());
     }
 
     @GetMapping("/{id}")

@@ -6,7 +6,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,8 @@ import com.example.demo.model.ServidorTemporario.ServidorTemporario;
 import com.example.demo.model.ServidorTemporario.ServidorTemporarioMapper;
 import com.example.demo.model.ServidorTemporario.ServidorTemporarioModelAssembler;
 import com.example.demo.repository.ServidorTemporarioRepository;
+
+import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
 @RequestMapping("/servidor-temporario")
@@ -33,13 +37,14 @@ public class ServidorTemporarioController {
     private ServidorTemporarioModelAssembler assembler;
 
     @GetMapping
-    public CollectionModel<EntityModel<ObterServidorTemporarioDTO>> getAll() {
-        List<EntityModel<ObterServidorTemporarioDTO>> servidores = repository.findAll().stream()
+    @PageableAsQueryParam
+    public CollectionModel<EntityModel<ObterServidorTemporarioDTO>> getAll(@Parameter(hidden = true) Pageable pageable) {
+        List<EntityModel<ObterServidorTemporarioDTO>> servidores = repository.findAll(pageable).stream()
                 .map(servidorTemporarioMapper::toObterServidorTemporarioDTO)
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(servidores, linkTo(methodOn(ServidorTemporarioController.class).getAll()).withSelfRel());
+        return CollectionModel.of(servidores, linkTo(methodOn(ServidorTemporarioController.class).getAll(pageable)).withSelfRel());
     }
 
     @GetMapping("/{id}")
