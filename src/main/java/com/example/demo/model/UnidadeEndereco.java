@@ -1,9 +1,13 @@
 package com.example.demo.model;
 
+import com.example.demo.model.Unidade.Unidade;
+
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "unidade_endereco")
+@Data
 public class UnidadeEndereco {
 
     @Id

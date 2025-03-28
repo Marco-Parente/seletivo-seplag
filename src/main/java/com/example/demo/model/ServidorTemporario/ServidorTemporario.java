@@ -1,18 +1,22 @@
-package com.example.demo.model;
+package com.example.demo.model.ServidorTemporario;
 
-import java.util.Date;
+import java.time.LocalDate;
+
+import com.example.demo.model.Pessoa.Pessoa;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "servidor_temporario")
+@Data
 public class ServidorTemporario {
 
     @Id
     private Integer pesId;
 
-    private Date stDataAdmissao;
-    private Date stDataDemissao;
+    private LocalDate stDataAdmissao;
+    private LocalDate stDataDemissao;
 
     @OneToOne
     @MapsId

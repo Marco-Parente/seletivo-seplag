@@ -1,9 +1,13 @@
-package com.example.demo.model;
+package com.example.demo.model.ServidorEfetivo;
+
+import com.example.demo.model.Pessoa.Pessoa;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "servidor_efetivo")
+@Data
 public class ServidorEfetivo {
 
     @Id

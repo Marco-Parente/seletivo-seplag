@@ -1,10 +1,15 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.Date;
+
+import com.example.demo.model.Pessoa.Pessoa;
 
 @Entity
 @Table(name = "foto_pessoa")
+@Data
 public class FotoPessoa {
 
     @Id
