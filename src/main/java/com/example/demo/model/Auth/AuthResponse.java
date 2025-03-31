@@ -1,6 +1,5 @@
 package com.example.demo.model.Auth;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data

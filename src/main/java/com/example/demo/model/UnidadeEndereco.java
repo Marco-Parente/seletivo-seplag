@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.example.demo.model.Endereco.Endereco;
 import com.example.demo.model.Unidade.Unidade;
 
 import jakarta.persistence.*;
@@ -21,6 +22,4 @@ public class UnidadeEndereco {
     @ManyToOne
     @JoinColumn(name = "end_id")
     private Endereco endereco;
-
-    // Getters and Setters
 }

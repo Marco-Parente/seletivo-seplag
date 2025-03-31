@@ -11,24 +11,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.UnidadeEndereco;
+import com.example.demo.model.Endereco.Endereco;
 import com.example.demo.model.Unidade.CriarUnidadeDTO;
 import com.example.demo.model.Unidade.ObterUnidadeDTO;
 import com.example.demo.model.Unidade.Unidade;
 import com.example.demo.model.Unidade.UnidadeMapper;
 import com.example.demo.model.Unidade.UnidadeModelAssembler;
+import com.example.demo.repository.EnderecoRepository;
+import com.example.demo.repository.UnidadeEnderecoRepository;
 import com.example.demo.repository.UnidadeRepository;
 
 import io.swagger.v3.oas.annotations.Parameter;
-
 
 @RestController
 @RequestMapping("/unidade")
@@ -36,6 +33,12 @@ public class UnidadeController {
 
     @Autowired
     private UnidadeRepository repository;
+
+    @Autowired
+    private EnderecoRepository enderecoRepository;
+
+    @Autowired
+    private UnidadeEnderecoRepository unidadeEnderecoRepository;
 
     @Autowired
     private UnidadeMapper unidadeMapper;
@@ -65,7 +68,23 @@ public class UnidadeController {
     @PostMapping
     public Unidade create(@RequestBody CriarUnidadeDTO criarUnidadeDto) {
         var u = unidadeMapper.toUnidade(criarUnidadeDto);
-        return repository.save(u);
+        u = repository.save(u);
+
+        if (criarUnidadeDto.getEndereco() != null) {
+            Endereco endereco = new Endereco();
+            endereco.setEndLogradouro(criarUnidadeDto.getEndereco().getLogradouro());
+            endereco.setEndTipoLogradouro(criarUnidadeDto.getEndereco().getTipoLogradouro());
+            endereco.setEndNumero(criarUnidadeDto.getEndereco().getNumero());
+            endereco.setEndBairro(criarUnidadeDto.getEndereco().getBairro());
+            endereco = enderecoRepository.save(endereco);
+
+            UnidadeEndereco unidadeEndereco = new UnidadeEndereco();
+            unidadeEndereco.setUnidade(u);
+            unidadeEndereco.setEndereco(endereco);
+            unidadeEnderecoRepository.save(unidadeEndereco);
+        }
+
+        return u;
     }
 
     @DeleteMapping("/{id}")

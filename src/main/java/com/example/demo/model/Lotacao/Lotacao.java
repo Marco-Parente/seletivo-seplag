@@ -6,6 +6,7 @@ import com.example.demo.model.Pessoa.Pessoa;
 import com.example.demo.model.Unidade.Unidade;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
@@ -18,6 +19,9 @@ public class Lotacao {
 
     private LocalDate lotDataLotacao;
     private LocalDate lotDataRemocao;
+
+    @Size(max = 100)
+    @Column(length = 100)
     private String lotPortaria;
 
     @ManyToOne

@@ -56,8 +56,16 @@ public class LotacaoController {
     }
 
     @PostMapping
-    public EntityModel<ObterLotacaoDTO> create(@RequestBody CriarLotacaoDTO criarLotacaoDto) {
+    public EntityModel<ObterLotacaoDTO> create(@RequestBody CriarLotacaoDTO criarLotacaoDto) throws Exception {
         var l = lotacaoMapper.toLotacao(criarLotacaoDto);
+
+        var lotacaoExistente = repository.findByUnidade_UnidIdAndPessoa_PesId(
+                criarLotacaoDto.getUnidadeId(), criarLotacaoDto.getPessoaId());
+
+        if (lotacaoExistente != null) {
+            throw new Exception("O servidor já está em uma lotação no momento");
+        }
+
         return assembler.toModel(lotacaoMapper.toObterLotacaoDTO(repository.save(l)));
     }
 
