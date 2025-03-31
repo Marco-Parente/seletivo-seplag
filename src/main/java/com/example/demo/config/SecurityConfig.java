@@ -25,6 +25,7 @@ public class SecurityConfig {
                         auth -> auth
                                 .requestMatchers(
                                         "/auth/**",
+                                        "/proxy/**",
                                         "/swagger-ui.html",
                                         "/swagger-ui/**",
                                         "/swagger-resources/**",

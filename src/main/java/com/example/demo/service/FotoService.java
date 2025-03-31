@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -78,13 +79,13 @@ public class FotoService {
         var linksFotos = fotosPessoa.stream().map(
                 foto -> {
                     try {
-                        var link = minioClient.getPresignedObjectUrl(
+                        var link = "http://localhost:8080/proxy/image?url=" + URLEncoder.encode(minioClient.getPresignedObjectUrl(
                                 GetPresignedObjectUrlArgs.builder()
                                         .method(Method.GET)
                                         .bucket(foto.getFpBucket())
                                         .object(foto.getFpHash())
                                         .expiry(5, TimeUnit.MINUTES)
-                                        .build());
+                                        .build()), "UTF-8");
 
                         var dto = fotoPessoaMapper.toDTO(foto, link);
 

@@ -2,6 +2,8 @@ version: '3.8'
 
 services:
   postgres:
+    networks:
+      - app-network
     image: postgres:latest
     environment:
       POSTGRES_USER: postgres
@@ -13,6 +15,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   minio:
+    networks:
+      - app-network
     image: minio/minio:latest
     environment:
       MINIO_ROOT_USER: minioadmin
@@ -24,6 +28,30 @@ services:
     volumes:
       - minio_data:/data
 
+  app:
+    networks:
+      - app-network
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - minio
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/seletivo_seplag
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET: photos
+
 volumes:
   postgres_data:
   minio_data:
+
+networks:
+  app-network:
+    driver: bridge
