@@ -78,18 +78,18 @@ Para as próximas requests, será necessário enviar o token, isso é possível 
 **2. Requisitos da API:**
 
 ### Requisitos Gerais:
-A. Implementar mecanismo de autorização e autenticação, bem como não permitir acesso ao endpoint a partir de domínios diversos do qual estará hospedado o serviço;
-- Demonstrado acima
-B. A solução de autenticação deverá expirar a cada 5 minutos e oferecer a possibilidade de renovação do período;
-- OK
-C. Implementar pelo menos os verbos post, put, get;
-- OK
-D. Conter recursos de paginação em todas as consultas;
-- OK
-E. Os dados produzidos deverão ser armazenados no servidor de banco de dados previamente criado em container;
-- OK
-F. Orquestrar a solução final utilizando Docker Compose de modo que inclua todos os contêineres utilizados.
-- OK
+- A. Implementar mecanismo de autorização e autenticação, bem como não permitir acesso ao endpoint a partir de domínios diversos do qual estará hospedado o serviço;
+  - Demonstrado acima
+- B. A solução de autenticação deverá expirar a cada 5 minutos e oferecer a possibilidade de renovação do período;
+  - OK
+- C. Implementar pelo menos os verbos post, put, get;
+  - OK
+- D. Conter recursos de paginação em todas as consultas;
+  - OK
+- E. Os dados produzidos deverão ser armazenados no servidor de banco de dados previamente criado em container;
+  - OK
+- F. Orquestrar a solução final utilizando Docker Compose de modo que inclua todos os contêineres utilizados.
+  - OK
 
 ### Requisitos Específicos:
 Implementar uma API Rest para o diagrama de banco de dados acima tomando por base as seguintes orientações:
