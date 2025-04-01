@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.Cidade;
 import com.example.demo.model.FotoPessoa.FotoPessoaMapper;
 import com.example.demo.model.Servidor.ObterServidorPorUnidadeDTO;
 import com.example.demo.model.ServidorTemporario.CriarServidorTemporarioDTO;
@@ -26,6 +27,7 @@ import com.example.demo.model.ServidorTemporario.ServidorTemporarioMapper;
 import com.example.demo.model.ServidorTemporario.ServidorTemporarioModelAssembler;
 import com.example.demo.model.PessoaEndereco;
 import com.example.demo.model.Endereco.Endereco;
+import com.example.demo.repository.CidadeRepository;
 import com.example.demo.repository.EnderecoRepository;
 import com.example.demo.repository.PessoaEnderecoRepository;
 import com.example.demo.repository.ServidorTemporarioRepository;
@@ -44,12 +46,14 @@ public class ServidorTemporarioController {
     private final FotoPessoaMapper mapper;
     private final EnderecoRepository enderecoRepository;
     private final PessoaEnderecoRepository pessoaEnderecoRepository;
+    private final CidadeRepository cidadeRepository;
 
     public ServidorTemporarioController(ServidorTemporarioRepository repository,
             ServidorTemporarioMapper servidorTemporarioMapper, ServidorTemporarioModelAssembler assembler,
             FotoService fotoService, FotoPessoaMapper mapper,
             EnderecoRepository enderecoRepository,
-            PessoaEnderecoRepository pessoaEnderecoRepository) {
+            PessoaEnderecoRepository pessoaEnderecoRepository,
+            CidadeRepository cidadeRepository) {
         this.servidorTemporarioRepository = repository;
         this.servidorTemporarioMapper = servidorTemporarioMapper;
         this.assembler = assembler;
@@ -57,6 +61,7 @@ public class ServidorTemporarioController {
         this.mapper = mapper;
         this.enderecoRepository = enderecoRepository;
         this.pessoaEnderecoRepository = pessoaEnderecoRepository;
+        this.cidadeRepository = cidadeRepository;
     }
 
     @GetMapping
@@ -92,6 +97,26 @@ public class ServidorTemporarioController {
             endereco.setEndTipoLogradouro(enderecoDto.getTipoLogradouro());
             endereco.setEndNumero(enderecoDto.getNumero());
             endereco.setEndBairro(enderecoDto.getBairro());
+            
+            if (enderecoDto.getCidade() != null) {
+                Cidade cidade;
+                if (enderecoDto.getCidade().getId() != null) {
+                    cidade = cidadeRepository.findById(Integer.parseInt(enderecoDto.getCidade().getId()))
+                            .orElseGet(() -> {
+                                var novaCidade = new Cidade();
+                                novaCidade.setCidNome(enderecoDto.getCidade().getNome());
+                                novaCidade.setCidUf(enderecoDto.getCidade().getUf());
+                                return cidadeRepository.save(novaCidade);
+                            });
+                } else {
+                    cidade = new Cidade();
+                    cidade.setCidNome(enderecoDto.getCidade().getNome());
+                    cidade.setCidUf(enderecoDto.getCidade().getUf());
+                    cidade = cidadeRepository.save(cidade);
+                }
+                endereco.setCidade(cidade);
+            }
+            
             endereco = enderecoRepository.save(endereco);
 
             PessoaEndereco pessoaEndereco = new PessoaEndereco();

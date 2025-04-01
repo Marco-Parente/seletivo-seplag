@@ -14,6 +14,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.Cidade;
 import com.example.demo.model.UnidadeEndereco;
 import com.example.demo.model.Endereco.Endereco;
 import com.example.demo.model.Unidade.CriarUnidadeDTO;
@@ -21,6 +22,7 @@ import com.example.demo.model.Unidade.ObterUnidadeDTO;
 import com.example.demo.model.Unidade.Unidade;
 import com.example.demo.model.Unidade.UnidadeMapper;
 import com.example.demo.model.Unidade.UnidadeModelAssembler;
+import com.example.demo.repository.CidadeRepository;
 import com.example.demo.repository.EnderecoRepository;
 import com.example.demo.repository.UnidadeEnderecoRepository;
 import com.example.demo.repository.UnidadeRepository;
@@ -39,6 +41,9 @@ public class UnidadeController {
 
     @Autowired
     private UnidadeEnderecoRepository unidadeEnderecoRepository;
+
+    @Autowired
+    private CidadeRepository cidadeRepository;
 
     @Autowired
     private UnidadeMapper unidadeMapper;
@@ -76,6 +81,26 @@ public class UnidadeController {
             endereco.setEndTipoLogradouro(criarUnidadeDto.getEndereco().getTipoLogradouro());
             endereco.setEndNumero(criarUnidadeDto.getEndereco().getNumero());
             endereco.setEndBairro(criarUnidadeDto.getEndereco().getBairro());
+
+            if (criarUnidadeDto.getEndereco().getCidade() != null) {
+                Cidade cidade;
+                if (criarUnidadeDto.getEndereco().getCidade().getId() != null) {
+                    cidade = cidadeRepository.findById(Integer.parseInt(criarUnidadeDto.getEndereco().getCidade().getId()))
+                            .orElseGet(() -> {
+                                var novaCidade = new Cidade();
+                                novaCidade.setCidNome(criarUnidadeDto.getEndereco().getCidade().getNome());
+                                novaCidade.setCidUf(criarUnidadeDto.getEndereco().getCidade().getUf());
+                                return cidadeRepository.save(novaCidade);
+                            });
+                } else {
+                    cidade = new Cidade();
+                    cidade.setCidNome(criarUnidadeDto.getEndereco().getCidade().getNome());
+                    cidade.setCidUf(criarUnidadeDto.getEndereco().getCidade().getUf());
+                    cidade = cidadeRepository.save(cidade);
+                }
+                endereco.setCidade(cidade);
+            }
+
             endereco = enderecoRepository.save(endereco);
 
             UnidadeEndereco unidadeEndereco = new UnidadeEndereco();

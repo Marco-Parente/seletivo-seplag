@@ -62,7 +62,7 @@ public class LotacaoController {
         var lotacaoExistente = repository.findByUnidade_UnidIdAndPessoa_PesId(
                 criarLotacaoDto.getUnidadeId(), criarLotacaoDto.getPessoaId());
 
-        if (lotacaoExistente != null) {
+        if (lotacaoExistente != null && !lotacaoExistente.isEmpty()) {
             throw new Exception("O servidor já está em uma lotação no momento");
         }
 

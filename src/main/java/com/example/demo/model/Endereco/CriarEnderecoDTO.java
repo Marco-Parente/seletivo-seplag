@@ -8,4 +8,5 @@ public class CriarEnderecoDTO {
     private String tipoLogradouro;
     private String numero;
     private String bairro;
+    private CriarCidadeDTO cidade;
 }
