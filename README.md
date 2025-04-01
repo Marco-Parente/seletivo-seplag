@@ -1,6 +1,11 @@
 # Seletivo SEPLAG MT - Sistema de Gerenciamento de Servidores
 
 Repositório criado para realização do projeto requisitado pelo seletivo do SEPLAG MT. O projeto implementa uma API REST para gerenciamento de servidores públicos, unidades e lotações.
+## Dados da inscrição:
+- Processo Seletivo: PSS 02/2025/SEPLAG (Analista de TI - Perfil Junior, Pleno e Sênior) 
+- Inscrição: 8810
+- Nome: MARCO ANTÔNIO PARENTE NUNES
+- Nível: Pleno
 
 ## Tecnologias Utilizadas
 
